@@ -1,0 +1,44 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Android Studio specific
+/.cxx/
+/.vs/
+/.vscode/
+
+# Lint & Log files
+lint/intermediates/
+lint/generated/
+logs/
+crashlytics/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Keystore files (Do not commit private keys)
+*.jks
+*.keystore
+
+# Firebase & Google Services
+/google-services.json
+
+# Miscellaneous
+*.log
+*.tmp
+
+# Ignore local settings
+/local.settings.json
