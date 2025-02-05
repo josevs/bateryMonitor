@@ -10,14 +10,14 @@ import android.os.IBinder
 import android.os.SystemClock
 
 class BatteryMonitorService : Service() {
-    private lateinit var batteryReceiver: BatteryLevelReceiver
+    private lateinit var batteryReceiver: BatteryStatusReceiver
     private val prefs: SharedPreferences by lazy {
         getSharedPreferences("BatteryMonitorPrefs", Context.MODE_PRIVATE)
     }
 
     override fun onCreate() {
         super.onCreate()
-        batteryReceiver = BatteryLevelReceiver(this)
+        batteryReceiver = BatteryStatusReceiver(this)
         registerReceiver(batteryReceiver, android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED))
         scheduleNextCheck()
     }

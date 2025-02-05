@@ -1,15 +1,11 @@
 package com.espmonitor
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.app.Service
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.BatteryManager
 import android.os.Bundle
-import android.os.SystemClock
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -28,7 +24,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var batteryReceiver = BatteryLevelReceiver(this)
+        val batteryReceiver = BatteryStatusReceiver(this)
         val prefs by lazy { getSharedPreferences("BatteryMonitorPrefs", Context.MODE_PRIVATE) }
 
         val layout = LinearLayout(this).apply {
@@ -92,19 +88,14 @@ class MainActivity : ComponentActivity() {
             val sendButton = Button(context).apply {
                 text = "Enviar Agora"
                 setOnClickListener {
-                    val batteryIntent = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-                    if (batteryIntent != null) {
-                        val level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-                        val deviceId = prefs.getString("deviceId", "123") ?: "123"
-                        batteryReceiver.sendBatteryLevel(deviceId, level)
-                    }
+                    batteryReceiver.sendBatteryStatus()
                 }
             }
             addView(sendButton)
         }
         setContentView(layout)
 
-        // Registrar o BroadcastReceiver
+        //Registrar o BroadcastReceiver
         val filter = IntentFilter("com.espmonitor.BATTERY_STATUS")
         registerReceiver(batteryStatusReceiver, filter)
 
