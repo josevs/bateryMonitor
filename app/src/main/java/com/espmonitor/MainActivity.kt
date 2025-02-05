@@ -95,10 +95,6 @@ class MainActivity : ComponentActivity() {
         }
         setContentView(layout)
 
-        //Registrar o BroadcastReceiver
-        val filter = IntentFilter("com.espmonitor.BATTERY_STATUS")
-        registerReceiver(batteryStatusReceiver, filter)
-
         startService(Intent(this, BatteryMonitorService::class.java))
     }
 
@@ -107,4 +103,17 @@ class MainActivity : ComponentActivity() {
         unregisterReceiver(batteryStatusReceiver)
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    override fun onResume() {
+        super.onResume()
+        val filter = IntentFilter("com.espmonitor.BATTERY_STATUS")
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            // API 34+ (Android 14 ou superior)
+            registerReceiver(batteryStatusReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            // Para versões mais antigas do Android
+            registerReceiver(batteryStatusReceiver, filter)
+        }
+
+    }
 }
