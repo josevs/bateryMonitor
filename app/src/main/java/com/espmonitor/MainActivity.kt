@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import java.util.Locale
 
 
 class MainActivity : ComponentActivity() {
@@ -49,7 +50,10 @@ class MainActivity : ComponentActivity() {
                         stopService(Intent(context, BatteryMonitorService::class.java))
                     }
                     text = if (isActive) "Desativar Serviço" else "Ativar Serviço"
-                    statusTextView.text = "Status do serviço: " + if (isActive) "Ativo" else "Inativo"
+                    statusTextView.text = buildString {
+                        append("Status do serviço: ")
+                        append(if (isActive) "Ativo" else "Inativo")
+                    }
                 }
             }
             addView(toggleServiceButton)
@@ -68,12 +72,12 @@ class MainActivity : ComponentActivity() {
 
             val intervalInput = EditText(context).apply {
                 hint = "Intervalo (min)"
-                setText((prefs.getLong("intervalMillis", 15 * 60 * 1000L) / (60 * 1000)).toString())
+                this.setText(String.format(Locale.getDefault(),"%d",prefs.getLong("intervalMillis", 15 * 60 * 1000L) / (60 * 1000)))
             }
             addView(intervalInput)
 
             val saveButton = Button(context).apply {
-                text = "Salvar Configuração"
+                text = getString(R.string.save_config)
                 setOnClickListener {
                     prefs.edit().apply {
                         putString("serverUrl", serverInput.text.toString())
@@ -86,7 +90,7 @@ class MainActivity : ComponentActivity() {
             addView(saveButton)
 
             val sendButton = Button(context).apply {
-                text = "Enviar Agora"
+                text = getString(R.string.send_now)
                 setOnClickListener {
                     batteryReceiver.sendBatteryStatus()
                 }
